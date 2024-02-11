@@ -1,0 +1,32 @@
+#bar{
+  background-color: black !important;
+}
+.tableclass {
+  border-radius: 20px !important;
+}
+.top-1{
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(209, 0, 28);
+
+}
+.top-2{
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(209, 0, 28);
+}
+.top-3{
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(209, 0, 28);
+}
+
+.custom-select-class{
+  background: #000 !important;
+  border-radius: 20px !important;
+}
+
+.table{
+  border-radius: 10px !important;
+  
+}

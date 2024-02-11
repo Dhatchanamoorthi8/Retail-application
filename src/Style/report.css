@@ -1,0 +1,7 @@
+.customer-history{
+  cursor:  pointer !important;
+}
+.customer-history:hover{
+  transform: translate(0.9);
+  color: blue;
+}

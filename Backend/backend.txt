@@ -1,0 +1,697 @@
+
+  
+server.get('/getdepartment_data', (req, res) => {
+  db.query('SELECT * FROM gym_main.departmentmaster ORDER BY departmentid DESC',(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/getdesgination_data', (req, res) => {
+  db.query('SELECT * FROM gym_main.designationmaster ORDER BY designationid DESC',(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/getActiveEmployees', (req, res) => {
+  const value = 'Active';
+  db.query('SELECT * FROM gym_main.empoloyeemaster WHERE status = ? ORDER BY employeeid DESC', value, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+
+
+server.post('/searchEmployees', (req, res) => {
+  const { employeename, employeecode, status } = req.body;
+  const values = [status, employeecode, employeename];
+  db.query('SELECT * FROM gym_main.empoloyeemaster WHERE status = ? AND (empoloyeecode = ? OR employeename = ?)', values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/EmployeeExportdata', (req, res) => {
+  db.query('SELECT * FROM gym_main.empoloyeemaster',(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+
+// Insert Querys
+
+server.post('/post', (req, res) => {
+  const date = new Date().toLocaleString();
+  const values = [
+    req.body.company_name,
+    req.body.status,
+    date,
+    req.body.createdby
+  ];
+
+  db.query(
+    'INSERT INTO gym_main.companymaster(companyname,status,creatdate,createdby) VALUES (?,?,?,?)',values,(err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Error inserting data');
+      } else {
+        console.log(result);
+        res.status(200).send('Data inserted successfully');
+      }
+    }
+  );
+});
+
+server.post('/branch_post', (req, res) => {
+
+  const date = new Date().toLocaleString();
+  const values = [
+    req.body.companyid,
+    req.body.branchname,
+    req.body.status,
+    date,
+    req.body.createdBy];
+
+  db.query(
+    'INSERT INTO gym_main.branchmaster(companyid,branchname,status,creatdate,createdby) VALUES (?,?,?,?,?)',
+    values,
+    (err, result) => {
+      if (err) {
+        const errorMessage = `Error inserting data: ${err}`;
+        console.log(errorMessage);
+        const currentDate = new Date().toLocaleString();
+        const logData = `${errorMessage}\n`;
+        const date = `${currentDate}`
+        db.query(
+          'INSERT INTO gym_main.err_log(error_logs, date) VALUES (?, ?)',
+          [logData, date],
+          (error,Result) => {
+            if (error) {
+              console.error(error);
+            }
+          }
+        );
+        res.status(500).send('Error inserting data');
+      } else {
+        console.log(result);
+        res.status(200).send('Data inserted successfully');
+      }
+    }
+  );
+});
+
+server.post('/Divison_post', (req, res) => {
+
+  const date = new Date().toLocaleString();
+  const values = [
+    req.body.Branchid,
+    req.body.divisionname,
+    req.body.status,
+    date,
+    req.body.createdBy 
+  ];
+
+  db.query(
+    'INSERT INTO gym_main.divisionmaster(branchid,divisionname,status,creatdate,createdby) VALUES (?,?,?,?,?)',
+    values,
+    (err, result) => {
+      if (err) {
+        const errorMessage = `Error inserting data: ${err}`;
+        console.log(errorMessage);
+        const currentDate = new Date().toLocaleString();
+        const logData = `${errorMessage}\n`;
+        const date = `${currentDate}`
+        db.query(
+          'INSERT INTO gym_main.err_log(error_logs, date) VALUES (?, ?)',
+          [logData, date],
+          (error,Result) => {
+            if (error) {
+              console.error(error);
+            }
+          }
+        );
+        res.status(500).send('Error inserting data');
+      } else {
+        console.log(result);
+        res.status(200).send('Data inserted successfully');
+      }
+    }
+  );
+});
+server.post('/Department_post', (req, res) => {
+
+  const date = new Date().toLocaleString();
+  const values = [
+    req.body.Divisonid,
+    req.body.departmentname,
+    req.body.status,
+    date,
+    req.body.createdBy
+  ];
+
+  db.query(
+    'INSERT INTO gym_main.departmentmaster(divisionid,departmentname,status,creatdate,createdby) VALUES (?,?,?,?,?)',
+    values,
+    (err, result) => {
+      if (err) {
+        const errorMessage = `Error inserting data: ${err}`;
+        console.log(errorMessage);
+        const currentDate = new Date().toLocaleString();
+        const logData = `${errorMessage}\n`;
+        const date = `${currentDate}`
+        db.query(
+          'INSERT INTO gym_main.err_log(error_logs, date) VALUES (?, ?)',
+          [logData, date],
+          (error,Result) => {
+            if (error) {
+              console.error(error);
+            }
+          }
+        );
+        res.status(500).send('Error inserting data');
+      } else {
+        console.log(result);
+        res.status(200).send('Data inserted successfully');
+      }
+    }
+  );
+});
+
+server.post('/Desgination_post', (req, res) => {
+
+  const date = new Date().toLocaleString();
+  const values = [
+    req.body.departmentid,
+    req.body.designationname,
+    req.body.status,
+    date,
+    req.body.createdBy];
+
+  db.query(
+    'INSERT INTO gym_main.designationmaster(departmentid,designationname,status,creatdate,createdby) VALUES (?,?,?,?,?)',
+    values,
+    (err, result) => {
+      if (err) {
+        const errorMessage = `Error inserting data: ${err}`;
+        console.log(errorMessage);
+        const currentDate = new Date().toLocaleString();
+        const logData = `${errorMessage}\n`;
+        const date = `${currentDate}`
+        db.query(
+          'INSERT INTO gym_main.err_log(error_logs, date) VALUES (?, ?)',
+          [logData, date],
+          (error,Result) => {
+            if (error) {
+              console.error(error);
+            }
+          }
+        );
+        res.status(500).send('Error inserting data');
+      } else {
+        console.log(result);
+        res.status(200).send('Data inserted successfully');
+      }
+    }
+  );
+});
+
+server.post('/employee_post', (req, res) => {
+
+  const date = new Date().toLocaleString();
+  const values = [
+    req.body.empolyeecode,
+    req.body.empolyeename,
+    req.body.dateofbirth,
+    req.body.dateofjoin,
+    req.body.referenceno,
+    req.body.status,
+    req.body.companyid,
+    req.body.branchid,
+    req.body.divisonid,
+    req.body.departmentid,
+    req.body.designationid,
+    req.body.createdBy,
+    date,
+    req.body.images,
+    ];
+
+  db.query(
+    'INSERT INTO gym_main.empoloyeemaster(empoloyeecode, employeename, dateofbirth, dateofjoining, referenceno, status, companyid, branchid, divisionid, departmentid, designationid,createdby,createdate,photo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+    values,
+    (err, result) => {
+      if (err) {
+        // const errorMessage = `Error inserting data: ${err}`;
+        // console.log(errorMessage);
+        // const currentDate = new Date().toLocaleString();
+        // const logData = `${errorMessage}\n`;
+        // const date = `${currentDate}`
+        // db.query(
+        //   'INSERT INTO gym_main.err_log(error_logs, date) VALUES (?, ?)',
+        //   [logData, date],
+        //   (error,Result) => {
+        //     if (error) {
+        //       console.error(error);
+        //     }
+        //   }
+        // );
+        console.log(err);
+        res.status(500).send('Error inserting data');
+      } else {
+        console.log(result);
+        res.status(200).send('Data inserted successfully');
+      }
+    }
+  );
+});
+
+
+
+
+
+
+// Updates Querys
+
+server.put('/updatecompanydata/:id',(req,res)=>{
+  const id = req.params.id
+  const date = new Date().toLocaleString();
+  const {company_name,status,createdBy} = req.body
+  db.query('UPDATE gym_main.companymaster SET companyname = ? , status = ? , updatedate = ?, createdby = ? where companyid = ?',
+  [company_name,status,date,createdBy,id],(err,result)=>{
+    if(err) throw err;
+    else{
+      console.log(result);
+      res.send(result)
+    }
+  })
+})
+
+server.put('/updatebranchdata/:id',(req,res)=>{
+  const id = req.params.id
+  const date = new Date().toLocaleString();
+  const {branch_name,status,companyid,createdBy} = req.body
+  db.query('UPDATE gym_main.branchmaster SET companyid = ?, branchname = ? , status = ? , updatedate = ? ,createdby = ? where branchid = ?',
+  [companyid,branch_name,status,date,createdBy,id],(err,result)=>{
+    if(err) throw err;
+    else{
+      console.log(result);
+      res.send(result)
+    }
+  })
+})
+
+server.put('/updatedivisondata/:id',(req,res)=>{
+  const id = req.params.id
+  const date = new Date().toLocaleString();
+  const {divisionname,status,branchid,createdBy} = req.body
+  db.query('UPDATE gym_main.divisionmaster SET branchid = ?, divisionname = ? , status = ? , updatedate = ?, createdby = ? where divisionid = ?',
+  [branchid,divisionname,status,date,createdBy,id],(err,result)=>{
+    if(err) throw err;
+    else{
+      console.log(result);
+      res.send(result)
+    }
+  })
+})
+
+
+server.put('/updatedepartmentdata/:id',(req,res)=>{
+  const id = req.params.id
+  const date = new Date().toLocaleString();
+  const {departmentname,status,divisionid,createdBy} = req.body
+  db.query('UPDATE gym_main.departmentmaster SET divisionid = ?, departmentname = ? , status = ? , updatedate = ? , createdby = ? where departmentid = ?',
+  [divisionid,departmentname,status,date,createdBy,id],(err,result)=>{
+    if(err) throw err;
+    else{
+      console.log(result);
+      res.send(result)
+    }
+  })
+})
+
+server.put('/updatedesginationdata/:id',(req,res)=>{
+  const id = req.params.id
+  const date = new Date().toLocaleString();
+  const {designationname,status,departmentid,createdBy} = req.body
+  db.query('UPDATE gym_main.designationmaster SET departmentid = ?, designationname = ?, status = ?, updatedate = ?, createdby = ? WHERE designationid = ?', [departmentid, designationname, status, date, createdBy, id], (err, result) => {
+    if(err) {
+      const errorMessage = `Error inserting data: ${err}`;
+      console.log(errorMessage);
+      const currentDate = new Date().toLocaleString();
+      const logData = `${errorMessage}\n`;
+      const date = `${currentDate}`
+      db.query(
+        'INSERT INTO gym_main.err_log(error_logs, date) VALUES (?, ?)',
+        [logData, date],
+        (error,Result) => {
+          if (error) {
+            console.error(error);
+          }
+        }
+      );
+      res.status(500).send('Error inserting data');
+    }
+    else{
+      console.log(result);
+      res.send(result)
+    }
+  })
+})
+
+
+server.put('/updateemployeedata/:id', (req, res) => {
+  const id = req.params.id;
+  const values = [
+    req.body.employeecode,
+    req.body.employeename,
+    req.body.dateofbirth,
+    req.body.dateofjoin,
+    req.body.referenceno,
+    req.body.status,
+    req.body.companyid,
+    req.body.branchid,
+    req.body.divisonid,
+    req.body.departmentid,
+    req.body.designationid,
+    req.body.createdBy,
+    req.body.images,
+    id]
+
+  db.query('UPDATE gym_main.empoloyeemaster SET empoloyeecode = ?, employeename = ?, dateofbirth = ?, dateofjoining = ?, referenceno = ?, status = ?, companyid = ?, branchid = ?, divisionid = ?, departmentid = ?, designationid = ?, createdby = ?, photo = ? WHERE employeeid = ?', values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error updating data');
+    } else {
+      console.log(result);
+      res.send(result);
+    }
+  });
+});
+
+
+
+// Delete Querys
+
+server.delete('/delete_companymaster',(req,res)=>{
+  const id = req.body.id
+  const createdBy = req.body.createdBy
+  const value = "InActive"
+  db.query('UPDATE gym_main.companymaster SET Status = ? , createdby = ? where companyid = ?',[value,createdBy,id],(err,response)=>{
+    if(err)throw err
+    else{
+      console.log(response);
+      res.send(response)
+    }
+  })
+})
+server.delete('/delete_branchmaster',(req,res)=>{
+  const id = req.body.id
+  const value = "InActive"
+  db.query('UPDATE gym_main.branchmaster SET Status = ? where branchid = ?',[value,id],(err,response)=>{
+    if(err)throw err
+    else{
+      console.log(response);
+      res.send(response)
+    }
+  })
+})
+server.delete('/delete_divisonmaster',(req,res)=>{
+  const id = req.body.id
+  const value = "InActive"
+  db.query('UPDATE gym_main.divisionmaster SET status = ? where divisionid = ?',[value,id],(err,response)=>{
+    if(err)throw err
+    else{
+      console.log(response);
+      res.send(response)
+    }
+  })
+})
+
+server.delete('/delete_departmentnmaster',(req,res)=>{
+  const id = req.body.id
+  const value = "InActive"
+  db.query('UPDATE gym_main.departmentmaster SET status = ? where departmentid = ?',[value,id],(err,response)=>{
+    if(err)throw err
+    else{
+      console.log(response);
+      res.send(response)
+    }
+  })
+})
+server.delete('/delete_designationmaster',(req,res)=>{
+  const id = req.body.id
+  const value = "InActive"
+  db.query('UPDATE gym_main.designationmaster SET status = ? where designationid = ?',[value,id],(err,response)=>{
+    if(err)throw err
+    else{
+      console.log(response);
+      res.send(response)
+    }
+  })
+})
+
+server.delete('/delete_employeemaster',(req,res)=>{
+  const id = req.body.id
+  const value = "InActive"
+  db.query('UPDATE gym_main.empoloyeemaster SET status = ? where employeeid = ?',[value,id],(err,response)=>{
+    if(err)throw err
+    else{
+      console.log(response);
+      res.send(response)
+    }
+  })
+})
+
+
+// Edit Querys
+
+server.get('/editcompany_data/:id', (req, res) => {
+  const id = req.params.id
+  db.query('SELECT * FROM gym_main.companymaster where companyid  = ?',id,(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/editbranch_data/:id', (req, res) => {
+  const id = req.params.id
+  db.query('SELECT * FROM gym_main.branchmaster where branchid  = ?',id,(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/editdivison_data/:id', (req, res) => {
+  const id = req.params.id
+  db.query('SELECT * FROM gym_main.divisionmaster where divisionid  = ?',id,(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/editdepartment_data/:id', (req, res) => {
+  const id = req.params.id
+  db.query('SELECT * FROM gym_main.departmentmaster where departmentid  = ?',id,(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/editdesignation_data/:id', (req, res) => {
+  const id = req.params.id
+  db.query('SELECT * FROM gym_main.designationmaster where designationid  = ?',id,(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/editemployee_data/:id', (req, res) => {
+  const id = req.params.id
+  db.query('SELECT * FROM gym_main.empoloyeemaster where employeeid  = ?',id,(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+
+// DropDown Quers
+
+server.get('/drop-down', (req, res) => {
+  db.query('SELECT * FROM gym_main.companymaster',(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+server.get('/drop-down-branch', (req, res) => {
+  db.query('SELECT * FROM gym_main.branchmaster',(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/drop-down-divison', (req, res) => {
+  db.query('SELECT * FROM gym_main.divisionmaster',(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/drop-down-department', (req, res) => {
+  db.query('SELECT * FROM gym_main.departmentmaster',(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+server.get('/drop-down-designation', (req, res) => {
+  db.query('SELECT * FROM gym_main.designationmaster',(err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error retrieving data');
+    } else {
+      console.log('success');
+      res.send(result);
+    }
+  });
+});
+
+
+// Upload data from front to backend
+
+server.post('/upload-data', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  const workbook = XLSX.readFile(req.file.path);
+  const sheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[sheetName];
+
+  const excelData = XLSX.utils.sheet_to_json(worksheet);
+
+  const insertQueries = [];
+
+ 
+
+  excelData.forEach((data) => {
+    const { 
+      empoloyeecode,
+      employeename,
+      dateofbirth,
+      dateofjoining,
+      referenceno,
+      status,
+      companyid,
+      branchid,
+      divisionid,
+      departmentid,
+      designationid,
+      createdby,
+      createdate,
+      } = data;
+      const defaultImage = getDefaultImageBase64();
+      const query = `INSERT INTO gym_main.empoloyeemaster(empoloyeecode, employeename, dateofbirth, dateofjoining, referenceno, status, companyid, branchid, divisionid, departmentid, designationid,createdby,createdate,photo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+      const queryParams = [empoloyeecode, employeename, dateofbirth, dateofjoining, referenceno, status, companyid, branchid, divisionid, departmentid, designationid,createdby,createdate,defaultImage];
+      insertQueries.push({ query, queryParams });
+  });
+
+  // Perform all insert queries in parallel
+  Promise.all(
+    insertQueries.map(({ query, queryParams }) => {
+      return new Promise((resolve, reject) => {
+        db.query(query, queryParams, (error, results, fields) => {
+          if (error) {
+            reject(error);
+          } else {
+            console.log("Uploaded data successfully");
+            resolve(results);
+          }
+        });
+      });
+    })
+  )
+    .then(() => {
+      res.json({ message: 'File uploaded and data stored successfully' });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error uploading data');
+    });
+});
